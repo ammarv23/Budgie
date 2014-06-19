@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import db.DBInit;
+
 /**
  * 
  * @author Ammar Vahanvaty May 21/ 2014
@@ -109,6 +111,7 @@ public class LoginUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				//TODO: ensure that the inputs are valid
+				DBInit.connectDB();
 				FrameController.switchFrames();
 			}
 			

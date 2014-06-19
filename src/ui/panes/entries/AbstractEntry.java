@@ -14,6 +14,7 @@ public abstract class AbstractEntry extends JPanel{
 	private LinkedList<JLabel> entries = new LinkedList<JLabel>();
 	private LinkedList<JComponent> data = new LinkedList<JComponent>();
 	
+	
 	public AbstractEntry(){
 		setLayout(new GridBagLayout());
 		
@@ -27,8 +28,39 @@ public abstract class AbstractEntry extends JPanel{
 		
 		//adds all components and stretches the title to match the new component size
 		gbc.gridy++;
-		
+	
 		while(!entries.isEmpty()){
+			JPanel s = new JPanel();
+			s.setLayout(new BoxLayout(s, BoxLayout.Y_AXIS));
+			Border paddingBorder = BorderFactory.createEmptyBorder(2,5,2,5);
+			Border actualBorder;
+			
+			JLabel e = entries.pop();
+			
+			if (entries.size() >= 1) actualBorder = BorderFactory.createMatteBorder(0,0,0,1, Color.black);
+			else actualBorder = BorderFactory.createMatteBorder(0,0,0,0, Color.black);
+			
+			//set dividing border
+			
+			s.add(e);
+			
+			JComponent c = data.pop();
+			
+			s.add(c);
+			
+			c.setBorder(BorderFactory.createMatteBorder(1,0 , 0, 0, Color.black));
+			
+			Border usedBorder = BorderFactory.createCompoundBorder(actualBorder, paddingBorder);
+			s.setBorder(usedBorder);
+			
+			add(s,gbc);
+			
+			gbc.gridx++;
+		}
+		
+		
+		
+/*		while(!entries.isEmpty()){
 			JLabel e = entries.pop();
 			Border paddingBorder = BorderFactory.createEmptyBorder(5,10,5,10);
 			Border actualBorder;
@@ -51,10 +83,7 @@ public abstract class AbstractEntry extends JPanel{
 			gbc.gridx++;
 			gbc.gridy--;
 			
-		}
-		
-		
-		
+		}*/
 		
 		
 		gbc.gridx = 0;
