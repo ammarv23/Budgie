@@ -111,7 +111,6 @@ public class LoginUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				//TODO: ensure that the inputs are valid
-				DBInit.connectDB();
 				FrameController.switchFrames();
 			}
 			
