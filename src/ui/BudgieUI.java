@@ -8,6 +8,7 @@ package ui;
 
 import javax.swing.*;
 
+import db.DBInit;
 import ui.panes.FrameController;
 import ui.panes.LoginUI;
 import ui.panes.MainUI;
@@ -22,6 +23,7 @@ public class BudgieUI extends JPanel {
 
 			@Override
 			public void run() {
+				DBInit.connectDB();
 				switcher = new FrameController();
 				login = new LoginUI("Budgie", switcher);
 				main = new MainUI("Budgie", switcher);

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import ui.panes.overview.DBLayout;
 import ui.panes.overview.EntriesLayout;
 import ui.panes.overview.OverviewLayout;
 
@@ -37,6 +38,8 @@ public class MainUI extends JFrame{
 	private void populateTabs(){
 		label2 = new EntriesLayout();
 		
+		JPanel thirdTab = new JPanel();
+		
 		button1 = new JButton("this is a button1");
 		button1.addActionListener(new ActionListener(){
 
@@ -47,9 +50,12 @@ public class MainUI extends JFrame{
 			
 		});
 		
+		thirdTab.add(new DBLayout());
+		thirdTab.add(button1);
+		
 		tabs.addTab("Debits", new OverviewLayout());
 		tabs.addTab("Tab 2", label2);
-		tabs.addTab("Tab 3", button1);
+		tabs.addTab("Tab 3", thirdTab);
 		
 		add(tabs);
 		pack();
