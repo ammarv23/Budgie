@@ -17,7 +17,7 @@ import db.DBInit;
 public class ProfitOutput extends AbstractOutput{
 	JLabel profit;
 	float sum;
-	private LinkedList<Float> expense = new LinkedList<Float>();
+	private LinkedList<Float> expense;
 	
 	public ProfitOutput(float... f){
 		super();
@@ -49,7 +49,7 @@ public class ProfitOutput extends AbstractOutput{
 	//Sums the total of chequing and savings balance and siplays it for the account holder.
  public void addContents() {
 		try {
-		
+			expense = new LinkedList<Float>();
 			Statement s = DBInit.createStatement();
 			ResultSet r = s.executeQuery("SELECT chequing_balance, savings_balance FROM accounts WHERE"
 					+ " id = " + DBInit.getAccountNumber());
@@ -101,9 +101,21 @@ public class ProfitOutput extends AbstractOutput{
 
 	@Override
 	public boolean update() {
-		super.update();
+		return false;
+	}
+	
+	public boolean updateWithValues(LinkedList<Float> totals){
+		sum = 0;
+		removeAll();
+		addContents();
+		
+		for (float f1: totals){
+			expense.add(f1);
+		}
+		
 		addSuperTotals();
 		return true;
+		
 	}
 
 
