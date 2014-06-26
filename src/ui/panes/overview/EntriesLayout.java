@@ -4,7 +4,9 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import ui.panes.entries.AbstractEntry;
 import ui.panes.entries.ExpenseEntry;
+import ui.panes.entries.IncomeEntry;
 
 public class EntriesLayout extends JPanel{
 	GridBagConstraints grid = new GridBagConstraints();
@@ -20,10 +22,12 @@ public class EntriesLayout extends JPanel{
 		grid.anchor = GridBagConstraints.NORTH;
 		
 		//Add first component
-		ExpenseEntry g = new ExpenseEntry();
-		g.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.black));
+		AbstractEntry g = new ExpenseEntry();
 		add(g, grid);
 		
+		grid.gridy++;
+		AbstractEntry g1 = new IncomeEntry();
+		add(g1, grid);
 	}
 
 }

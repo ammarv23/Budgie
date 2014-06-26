@@ -5,24 +5,32 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.sql.SQLException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import ui.panes.FrameController;
+
 @SuppressWarnings("serial")
 public abstract class AbstractOutput extends JPanel{
-	private GridBagConstraints gbc = new GridBagConstraints();
+	protected GridBagConstraints gbc = new GridBagConstraints();
+	protected float total;
 	
-	public AbstractOutput(){
-		Border line = BorderFactory.createLineBorder(getColour());
-		Border title = BorderFactory.createTitledBorder(line, getTitle());
-		setBorder(title);
-		
+	public AbstractOutput() {
 		setLayout(new GridBagLayout());
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		
-		addContents();
+		try {
+			addContents();
+		} catch (SQLException e) {
+			showError(e.getLocalizedMessage());
+		}
+		
+		Border line = BorderFactory.createLineBorder(getColour());
+		Border title = BorderFactory.createTitledBorder(line, getTitle());
+		setBorder(title);
 		
 		//total field
 		
@@ -33,7 +41,7 @@ public abstract class AbstractOutput extends JPanel{
 
 	protected abstract Color getColour();
 	
-	protected abstract void addContents();
+	protected abstract void addContents() throws SQLException;
 	
 	protected void addInput(String label, JComponent comp){
 		gbc.weightx = 1;
@@ -57,17 +65,65 @@ public abstract class AbstractOutput extends JPanel{
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		add(j,gbc);
 		
-	
 		gbc.gridy++;
 	}
 	
-	protected void addTotal(){
-		JLabel total = new JLabel("Total:");
-		total.setFont(new Font("sansserif", Font.BOLD, 14));
+	protected void addTotal(int... totalValues){
+		JLabel total1 = new JLabel("Total:");
+		total1.setFont(new Font("sansserif", Font.BOLD, 14));
 		
 		gbc.ipady = 0;
-		add(total, gbc);
+		add(total1, gbc);
+		
+		int sum = 0;
+		
+		for (int i: totalValues){
+			sum += i;
+		}
+		
+		JLabel totalVal = new JLabel("$ " + Integer.toString(sum), SwingConstants.RIGHT);
+		totalVal.setFont(new Font("sansserif", Font.BOLD, 14));
+		
+		gbc.gridx++;
+		
+		total = sum;
+		
+		add(totalVal, gbc);
 		
 	}
+	
+	
+	protected void showError(String message){
+		JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+		System.exit(ERROR);
+	}
+	
+	protected void showInfo(String message){
+		JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public float getTotal(){
+		return this.total;
+	}
+	
+	public void setTotal(float total){
+		this.total = total;
+	}
+
+	public boolean update(){
+		//wipe the previous data.
+		removeAll();
+		System.out.println(this.getTitle() + " checking in");
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		try {
+			addContents();
+		} catch (SQLException e) {
+			showError(e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+		return true;
+	}
+
 
 }

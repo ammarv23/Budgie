@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -25,6 +27,7 @@ public abstract class AbstractEntry extends JPanel{
 		gbc.weighty = 1;
 		
 		setEntries(entries, data);
+		System.out.println("Data contains " + data.size() + " elements");
 		
 		//adds all components and stretches the title to match the new component size
 		gbc.gridy++;
@@ -48,7 +51,7 @@ public abstract class AbstractEntry extends JPanel{
 			
 			s.add(c);
 			
-			c.setBorder(BorderFactory.createMatteBorder(1,0 , 0, 0, Color.black));
+			//c.setBorder(BorderFactory.createMatteBorder(1,0 , 0, 0, Color.black));
 			
 			Border usedBorder = BorderFactory.createCompoundBorder(actualBorder, paddingBorder);
 			s.setBorder(usedBorder);
@@ -56,35 +59,9 @@ public abstract class AbstractEntry extends JPanel{
 			add(s,gbc);
 			
 			gbc.gridx++;
+			
 		}
-		
-		
-		
-/*		while(!entries.isEmpty()){
-			JLabel e = entries.pop();
-			Border paddingBorder = BorderFactory.createEmptyBorder(5,10,5,10);
-			Border actualBorder;
 			
-			if (entries.size() >= 1) actualBorder = BorderFactory.createMatteBorder(0,0,0,1, Color.black);
-			else actualBorder = BorderFactory.createMatteBorder(0,0,0,0, Color.black);
-			
-			Border usedBorder = BorderFactory.createCompoundBorder(actualBorder, paddingBorder);
-			e.setBorder(usedBorder);
-			add(e, gbc);
-			gbc.gridy++;
-			
-			//Add data components directly under the entries
-			JComponent c = data.pop();
-			c.setBorder(usedBorder);
-			
-			add(c, gbc);
-			
-			//set gbc to the next point
-			gbc.gridx++;
-			gbc.gridy--;
-			
-		}*/
-		
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -98,8 +75,49 @@ public abstract class AbstractEntry extends JPanel{
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		add(title, gbc);
 		
-	
+
+		//add enter and clear butttons
 		
+		gbc.gridy = 2;
+		JPanel buttonPanels = new JPanel();
+		JButton enter, clear;
+		
+		enter = new JButton("Enter");
+		clear = new JButton("Clear");
+		
+		enter.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				submit();
+			}
+			
+		});
+		
+		clear.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				clear();
+			}	
+		});
+		
+		buttonPanels.add(enter);
+		
+		buttonPanels.add(clear);
+		
+		add(buttonPanels,gbc);
+		
+		setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+		
+	}
+	
+	protected void showError(String message){
+		JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	protected void showInfo(String message){
+		JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	protected abstract void setEntries(LinkedList<JLabel> entries2, LinkedList<JComponent> data2);
@@ -107,5 +125,9 @@ public abstract class AbstractEntry extends JPanel{
 	protected abstract String getTitle();
 	
 	protected abstract Color getColor();
+	
+	protected abstract void submit();
+	
+	protected abstract void clear();
 	
 }

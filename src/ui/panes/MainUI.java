@@ -5,10 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import ui.panes.overview.DBLayout;
 import ui.panes.overview.EntriesLayout;
 import ui.panes.overview.OverviewLayout;
+import ui.panes.overview.UpdateManager;
 
 /**
  * 
@@ -28,7 +31,7 @@ public class MainUI extends JFrame{
 		super(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(500, 500));
-		setAlwaysOnTop(true);
+		//setAlwaysOnTop(true);
 		setLocationRelativeTo(null);
 		
 		tabs = new JTabbedPane();
@@ -53,9 +56,29 @@ public class MainUI extends JFrame{
 		thirdTab.add(new DBLayout());
 		thirdTab.add(button1);
 		
-		tabs.addTab("Debits", new OverviewLayout());
-		tabs.addTab("Tab 2", label2);
+		OverviewLayout ovr = new OverviewLayout();
+		
+		tabs.addTab("Overview", ovr);
+		tabs.addTab("Inputs", label2);
 		tabs.addTab("Tab 3", thirdTab);
+		
+		tabs.addChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				JTabbedPane sourcePane = (JTabbedPane) arg0.getSource();
+				
+				int index = sourcePane.getSelectedIndex();
+				System.out.println("Index is: " + index);
+				
+				//only update on the first index change
+				if (index == 0){
+					UpdateManager.updateAll();
+				}
+			}
+			
+			
+		});
 		
 		add(tabs);
 		pack();

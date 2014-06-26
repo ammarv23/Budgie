@@ -1,13 +1,32 @@
 package ui.panes.outputs;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.LinkedList;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
+import db.DBInit;
 
 @SuppressWarnings("serial")
 public class ProfitOutput extends AbstractOutput{
 	JLabel profit;
+	float sum;
+	private LinkedList<Float> expense = new LinkedList<Float>();
+	
+	public ProfitOutput(float... f){
+		super();
+		for (float f1: f){
+		expense.add(f1);	
+		}
+		
+		addSuperTotals();
+	}
 
 
 	@Override
@@ -18,14 +37,75 @@ public class ProfitOutput extends AbstractOutput{
 
 	@Override
 	protected Color getColour() {
-		return Color.green;
+		if (sum < 0){
+			return Color.red;
+		}
+		else return Color.green;
 	}
 
 
 	@Override
-	protected void addContents() {
-		profit = new JLabel("profit");
+	
+	//Sums the total of chequing and savings balance and siplays it for the account holder.
+ public void addContents() {
+		try {
+		
+			Statement s = DBInit.createStatement();
+			ResultSet r = s.executeQuery("SELECT chequing_balance, savings_balance FROM accounts WHERE"
+					+ " id = " + DBInit.getAccountNumber());
+			
+			profit = new JLabel();
+			sum = 0;
+			r.next();
+			float chequing = r.getInt(1);
+			float savings = r.getInt(2);
+			
+			//sum = chequing + savings - expenses - varexp;
+			
+			sum = chequing + savings;
+			
+			//profit.setText("$ " + Float.toString(sum));
+			profit.setFont(new Font("Arial", Font.PLAIN, 20));
+			profit.setToolTipText("<html>Chequing balance is: " + chequing + "<br>" 
+								+ "Savings Balance is: " + savings +
+								"</html>");
+			
+			
+			//add(j);
+					
+		} catch (SQLException e) {
+			showError(e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	private void addSuperTotals() {
+		//gather all the totals in expense and subtract from sum
+		
+		for (float f1: expense){
+			sum -= f1;
+		}
+		
+		//change border depending on value of sum
+			Border line = BorderFactory.createLineBorder(getColour());
+			Border title = BorderFactory.createTitledBorder(line, getTitle());
+			setBorder(title);
+		
+		profit.setText("$ " + Float.toString(sum));
+		
 		add(profit);
 	}
+
+
+	@Override
+	public boolean update() {
+		super.update();
+		addSuperTotals();
+		return true;
+	}
+
+
 
 }

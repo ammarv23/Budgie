@@ -23,14 +23,21 @@ public class BudgieUI extends JPanel {
 
 			@Override
 			public void run() {
-				DBInit.connectDB();
 				switcher = new FrameController();
 				login = new LoginUI("Budgie", switcher);
-				main = new MainUI("Budgie", switcher);
-				switcher.setFrames(login, main);
+				switcher.setFrame(login);
+				
 			}
 		
 		});
+	}
+	
+	public static void setMain(JFrame mains){
+		main = mains;
+	}
+	
+	public static FrameController getSwitcher(){
+		return switcher;
 	}
 
 }

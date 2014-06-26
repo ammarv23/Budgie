@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import ui.BudgieUI;
 import db.DBInit;
 
 /**
@@ -33,7 +34,7 @@ public class LoginUI extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(500, 500));
 		setLocationRelativeTo(null);
-		setAlwaysOnTop(true);
+		//setAlwaysOnTop(true);
 		
 		createHomePage();
 	}
@@ -81,15 +82,15 @@ public class LoginUI extends JFrame{
 		
 		//allow the user to hit enter and automatically complete the entries without clicking
 		username = new JTextField(10);
-		password = new JTextField(10);
+		//password = new JTextField(10);
 		
-		password.addKeyListener(new KeyListener(){
+		username.addKeyListener(new KeyListener(){
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				int key = arg0.getKeyCode();
 				if (key == KeyEvent.VK_ENTER){
-				FrameController.switchFrames();
+				login(username);
 				}
 				
 			}
@@ -110,8 +111,7 @@ public class LoginUI extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO: ensure that the inputs are valid
-				FrameController.switchFrames();
+			login(username);
 			}
 			
 			
@@ -123,7 +123,7 @@ public class LoginUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				username.setText(null);
-				password.setText(null);
+				//password.setText(null);
 				username.requestFocus();
 				
 			}
@@ -132,34 +132,58 @@ public class LoginUI extends JFrame{
 		});
 		
 		userLabel = new JLabel("Username: ");
-		passLabel = new JLabel("Password: ");
+		//passLabel = new JLabel("Password: ");
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		inputField.add(userLabel, gbc);
 		
-		gbc.gridx = 0;
+	/*	gbc.gridx = 0;
 		gbc.gridy = 1;
-		inputField.add(passLabel, gbc);
+		inputField.add(passLabel, gbc);*/
 	
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		inputField.add(username, gbc);
 		
-		gbc.gridx = 1;
+/*		gbc.gridx = 1;
 		gbc.gridy = 1;
-		inputField.add(password, gbc);
+		inputField.add(password, gbc);*/
 		
 		gbc.gridx = 0;
-		gbc.gridy = 2;
+		gbc.gridy = 1;
 		inputField.add(enter,gbc);
 		
 		gbc.gridx = 1;
-		gbc.gridy = 2;
+		gbc.gridy = 1;
 		inputField.add(cancel,gbc);
 		
 		return inputField;
 		
+	}
+	
+	//checks the name for authenticity and attempts login
+	private void login(JTextField user){
+		String username = user.getText();
+		user.setText(null);
+		user.requestFocus();
+		
+		//Validate username
+		if (username.isEmpty()){
+			System.out.println("Empty values!");
+		}
+		else if (!username.matches("[a-zA-Z]+")){
+			System.out.println("Improper name!");
+		}
+		
+		else {
+		DBInit.connectDB(username);
+		FrameController s = BudgieUI.getSwitcher();
+		JFrame main = new MainUI("Budgie", s);
+		BudgieUI.setMain(main);
+		s.setFrame(main);
+		FrameController.switchFrames();
+		}
 	}
 
 }

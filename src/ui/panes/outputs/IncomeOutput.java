@@ -1,6 +1,7 @@
 package ui.panes.outputs;
 
 import java.awt.Color;
+
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 

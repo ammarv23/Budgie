@@ -1,12 +1,15 @@
 package ui.panes.outputs;
 
 import java.awt.Color;
+import java.sql.SQLException;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class SavingsOutput extends AbstractOutput{
+
+
 	private JLabel eSavings, tfsa, rrsp;
 	
 	@Override

@@ -29,10 +29,15 @@ public class FrameController {
 		}
 	}
 	
-	public void setFrames(JFrame frame, JFrame frame2){
+	public void setFrame(JFrame frame){
+		if (a == null){
 		a = frame;
-		b = frame2;
 		a.setVisible(true);
+		}
+		else {
+			b = frame;
+		}
+	
 	}
 	
 	public void printFrameName(){
