@@ -7,57 +7,71 @@ import java.sql.SQLException;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import ui.displays.DebugPrinter;
 import db.DBInit;
 
 @SuppressWarnings("serial")
 public class ExpensesOutput extends AbstractOutput{
 
 	private JLabel fixed, variable, goal;
-	private int fixedValue, varValue, goalValue;
+	private float fixedValue, varValue, goalValue;
 	
 	@Override
 	//populates the JPanel
 	public void addContents(){
-		variable = new JLabel("Test2", SwingConstants.RIGHT);
-		goal = new JLabel("Test3", SwingConstants.RIGHT);
 		
 		//Add Fixed expenses from DB
 			ResultSet r;
 			try {
+				
+			fixedValue = 0;
+			varValue = 0;
+			goalValue = 0;
+			
 				r = DBInit.createStatement().executeQuery("SELECT SUM(amount) FROM expenses WHERE user_id = " + DBInit.getAccountNumber());
 		
-			r.next();
+			if (r.next()){
 			fixedValue = r.getInt(1);
 			
-			fixed = new JLabel("$" + Integer.toString(fixedValue), SwingConstants.RIGHT);
+			fixed = new JLabel("$" + Float.toString(fixedValue), SwingConstants.RIGHT);
+			} else DebugPrinter.printDebug("Unable to obtain resultSet at expenses");
 			
 		//Add Variable(transaction) expenses for the current month from DB
 			ResultSet var = DBInit.createStatement().executeQuery("SELECT SUM(amount) FROM transaction WHERE id = '" + DBInit.getAccountNumber()
 					+ "' AND MONTH(CURDATE()) = MONTH(date)");
-			var.next();
+			if (var.next()){
 			varValue = var.getInt(1);
 			
-			variable = new JLabel("$" + Integer.toString(varValue), SwingConstants.RIGHT);
+			variable = new JLabel("$" + Float.toString(varValue), SwingConstants.RIGHT);
+			}else DebugPrinter.printDebug("Unable to obtain resultSet at transaction");
 			
 		//Return the amount in goals for the current month
 			//result set contains full goal amount and month breakdown to reach goal
 			ResultSet goals = DBInit.createStatement().executeQuery("SELECT amount, DATEDIFF(end_date, start_date)/30 as 'interval' from goals where id = "
 					+ DBInit.getAccountNumber() + " AND CURDATE() < end_date");
 			
-			goals.next();
-			goalValue = goals.getInt(1) / goals.getInt(2);
+			if (goals.next()){
+				
+			do {	
+			goalValue += goals.getInt(1) / goals.getInt(2);
+			}while (goals.next());
 			
-			//System.out.println("goal amount for the month is: " + goalValue);
-			
-			goal = new JLabel("$" + Integer.toString(goalValue), SwingConstants.RIGHT);
+			}else{
+				DebugPrinter.printDebug("Unable to obtain resultSet at goals");
+				goalValue = 0;
+			}
+			goal = new JLabel("$" + Float.toString(goalValue), SwingConstants.RIGHT);
 			
 		
 		addInput("Fixed:", fixed);
 		addInput("Variable:",variable);
 		addInput("Goal:", goal);
 		addTotal(fixedValue, varValue, goalValue);
+		super.total = -super.total;
 			} catch (SQLException e) {
+				e.printStackTrace();
 				showError(e.getLocalizedMessage());
+				
 			}
 	}
 

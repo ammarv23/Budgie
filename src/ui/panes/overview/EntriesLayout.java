@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import ui.panes.entries.AbstractEntry;
 import ui.panes.entries.ExpenseEntry;
+import ui.panes.entries.GoalEntry;
 import ui.panes.entries.IncomeEntry;
 
 public class EntriesLayout extends JPanel{
@@ -28,6 +29,10 @@ public class EntriesLayout extends JPanel{
 		grid.gridy++;
 		AbstractEntry g1 = new IncomeEntry();
 		add(g1, grid);
+		
+		grid.gridy++;
+		AbstractEntry g2 = new GoalEntry();
+		add(g2, grid);
 	}
 
 }

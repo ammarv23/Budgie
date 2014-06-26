@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import ui.displays.DebugPrinter;
+
 public abstract class AbstractEntry extends JPanel{
 	private GridBagConstraints gbc = new GridBagConstraints();
 	private LinkedList<JLabel> entries = new LinkedList<JLabel>();
@@ -27,7 +29,7 @@ public abstract class AbstractEntry extends JPanel{
 		gbc.weighty = 1;
 		
 		setEntries(entries, data);
-		System.out.println("Data contains " + data.size() + " elements");
+		DebugPrinter.printDebug("Data contains " + data.size() + " elements");
 		
 		//adds all components and stretches the title to match the new component size
 		gbc.gridy++;

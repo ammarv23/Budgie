@@ -51,31 +51,28 @@ public class ProfitOutput extends AbstractOutput{
 		try {
 			expense = new LinkedList<Float>();
 			Statement s = DBInit.createStatement();
-			ResultSet r = s.executeQuery("SELECT chequing_balance, savings_balance FROM accounts WHERE"
+			ResultSet r = s.executeQuery("SELECT chequing_balance FROM accounts WHERE"
 					+ " id = " + DBInit.getAccountNumber());
 			
 			profit = new JLabel();
 			sum = 0;
 			r.next();
 			float chequing = r.getInt(1);
-			float savings = r.getInt(2);
 			
 			//sum = chequing + savings - expenses - varexp;
-			
-			sum = chequing + savings;
-			
+
 			//profit.setText("$ " + Float.toString(sum));
 			profit.setFont(new Font("Arial", Font.PLAIN, 20));
-			profit.setToolTipText("<html>Chequing balance is: " + chequing + "<br>" 
-								+ "Savings Balance is: " + savings +
+			profit.setToolTipText("<html>Chequing balance is: " + chequing + "<br>" +
 								"</html>");
 			
 			
 			//add(j);
 					
 		} catch (SQLException e) {
-			showError(e.getLocalizedMessage());
 			e.printStackTrace();
+			showError(e.getLocalizedMessage());
+		
 		}
 		
 	}
@@ -85,7 +82,7 @@ public class ProfitOutput extends AbstractOutput{
 		//gather all the totals in expense and subtract from sum
 		
 		for (float f1: expense){
-			sum -= f1;
+			sum += f1;
 		}
 		
 		//change border depending on value of sum

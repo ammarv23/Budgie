@@ -39,7 +39,7 @@ public class OverviewLayout extends JPanel {
 		ExpensesOutput e1 = new ExpensesOutput();
 		IncomeOutput e2 = new IncomeOutput();
 		SavingsOutput e3 = new SavingsOutput();
-		ProfitOutput p = new ProfitOutput(e1.getTotal());
+		ProfitOutput p = new ProfitOutput(e1.getTotal(), e2.getTotal(), e3.getTotal());
 
 		//Update manager handles all updating when overview tab is switched to.
 		u = new UpdateManager(e1,e2,e3,p);

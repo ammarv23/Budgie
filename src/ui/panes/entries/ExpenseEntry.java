@@ -10,6 +10,7 @@ import java.util.LinkedList;
 
 import javax.swing.*;
 
+import ui.displays.DebugPrinter;
 import db.DBInit;
 
 public class ExpenseEntry extends AbstractEntry {
@@ -91,10 +92,14 @@ public class ExpenseEntry extends AbstractEntry {
 			prep.setString(5, amt.getText());
 			
 			prep.execute();
-			System.out.println("insertion successful");
+			DebugPrinter.printDebug("insertion successful");
+			showInfo("Added transaction from " + vendor.getText() + " for $" + amt.getText() + " on " + date);
+			clear();
+			
 			
 		} catch (SQLException e) {
 			showError(e.getMessage());
+			clear();
 			e.printStackTrace();
 		}
 		
@@ -103,7 +108,7 @@ public class ExpenseEntry extends AbstractEntry {
 	@Override
 	protected void clear() {
 		vendor.setText(null);
-		type.setText(null);
+		typeList.setSelectedIndex(0);
 		amt.setText(null);
 	}
 

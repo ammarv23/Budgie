@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import ui.displays.DebugPrinter;
 import ui.panes.overview.DBLayout;
 import ui.panes.overview.EntriesLayout;
 import ui.panes.overview.OverviewLayout;
@@ -69,7 +70,7 @@ public class MainUI extends JFrame{
 				JTabbedPane sourcePane = (JTabbedPane) arg0.getSource();
 				
 				int index = sourcePane.getSelectedIndex();
-				System.out.println("Index is: " + index);
+				DebugPrinter.printDebug("Index is: " + index);
 				
 				//only update on the first index change
 				if (index == 0){

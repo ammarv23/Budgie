@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import ui.displays.DebugPrinter;
 import ui.panes.FrameController;
 
 @SuppressWarnings("serial")
@@ -26,6 +27,7 @@ public abstract class AbstractOutput extends JPanel{
 			addContents();
 		} catch (SQLException e) {
 			showError(e.getLocalizedMessage());
+			e.printStackTrace();
 		}
 		
 		Border line = BorderFactory.createLineBorder(getColour());
@@ -68,20 +70,20 @@ public abstract class AbstractOutput extends JPanel{
 		gbc.gridy++;
 	}
 	
-	protected void addTotal(int... totalValues){
+	protected void addTotal(float... totalValues){
 		JLabel total1 = new JLabel("Total:");
 		total1.setFont(new Font("sansserif", Font.BOLD, 14));
 		
 		gbc.ipady = 0;
 		add(total1, gbc);
 		
-		int sum = 0;
+		float sum = 0;
 		
-		for (int i: totalValues){
+		for (float i: totalValues){
 			sum += i;
 		}
 		
-		JLabel totalVal = new JLabel("$ " + Integer.toString(sum), SwingConstants.RIGHT);
+		JLabel totalVal = new JLabel("$ " + Float.toString(sum), SwingConstants.RIGHT);
 		totalVal.setFont(new Font("sansserif", Font.BOLD, 14));
 		
 		gbc.gridx++;
@@ -113,7 +115,7 @@ public abstract class AbstractOutput extends JPanel{
 	public boolean update(){
 		//wipe the previous data.
 		removeAll();
-		System.out.println(this.getTitle() + " checking in");
+		DebugPrinter.printDebug(this.getTitle() + " checking in");
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		try {
